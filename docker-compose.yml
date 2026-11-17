@@ -7,7 +7,6 @@
 #   docker compose up -d         # 백그라운드로 컨테이너 시작
 #   docker compose exec gnuradio bash   # 컨테이너 쉘 진입
 #   (컨테이너 안에서) uhd_find_devices / gnuradio-companion
-#
 
 services:
   gnuradio:
