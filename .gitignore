@@ -1,0 +1,6 @@
+# workspace 안의 작업 파일은 공유하지 않음 (폴더만 유지)
+workspace/*
+!workspace/.gitkeep
+
+*.swp
+.DS_Store

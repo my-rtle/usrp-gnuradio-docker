@@ -1,0 +1,31 @@
+# USRP + GNU Radio 배포용 docker-compose
+#
+# 사용법 (다른 사람 PC에서):
+#   mkdir -p workspace
+#   xhost +local:docker          # GUI(gnuradio-companion) 띄울 경우 1회 실행
+#   docker compose pull          # Docker Hub에서 이미지 받기
+#   docker compose up -d         # 백그라운드로 컨테이너 시작
+#   docker compose exec gnuradio bash   # 컨테이너 쉘 진입
+#   (컨테이너 안에서) uhd_find_devices / gnuradio-companion
+#
+# 이미지를 직접 빌드하려면 docker-compose.build.yml 사용:
+#   docker compose -f docker-compose.build.yml up -d --build
+
+services:
+  gnuradio:
+    image: woodahyun/usrp:latest      # Docker Hub에 올린 이미지 (build 대신 pull)
+    container_name: usrp
+    privileged: true                  # USB 장치 제어 및 하위 레벨 접근 권한 허용
+    network_mode: "host"              # 이더넷 기반 USRP(N2xx/X3xx 등) 연결을 위해 호스트 네트워크 공유
+    environment:
+      - DISPLAY=${DISPLAY:-:0}        # GUI 화면(X11) 출력을 위한 환경 변수 패스스루
+      - QT_X11_NO_MITSHM=1            # 컨테이너에서 Qt GUI 띄울 때 공유메모리 오류 방지
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix # X11 소켓 마운트 (GUI 창 띄우기)
+      - /dev/bus/usb:/dev/bus/usb     # USB 포트 마운트 (USB 기반 USRP B2xx 인식)
+      - ./workspace:/workspace        # 로컬의 workspace 폴더를 컨테이너 내부에 연동
+    working_dir: /workspace
+    stdin_open: true                  # docker run -i
+    tty: true                         # docker run -t
+    restart: unless-stopped
+    command: /bin/bash

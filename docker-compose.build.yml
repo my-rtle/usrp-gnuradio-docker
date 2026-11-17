@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  gnuradio:
+    build: .
+    container_name: usrp
+    privileged: true                  # USB 장치 제어 및 하위 레벨 접근 권한 허용
+    network_mode: "host"              # 이더넷 기반 USRP 연결을 위해 호스트 네트워크 공유
+    environment:
+      - DISPLAY=${DISPLAY}            # GUI 화면(X11) 출력을 위한 환경 변수 패스스루
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix # X11 소켓 마운트 (GUI 창 띄우기)
+      - /dev/bus/usb:/dev/bus/usb     # USB 포트 마운트 (USB 기반 USRP 인식)
+      - ./workspace:/workspace        # 로컬의 workspace 폴더를 컨테이너 내부에 연동!
+    stdin_open: true                  # 컨테이너 표준 입력 유지 (docker run -i)
+    tty: true                         # 가상 터미널 할당 (docker run -t)
+    command: /bin/bash                # 실행 시 기본 쉘 진입
