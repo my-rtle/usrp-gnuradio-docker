@@ -8,8 +8,6 @@
 #   docker compose exec gnuradio bash   # 컨테이너 쉘 진입
 #   (컨테이너 안에서) uhd_find_devices / gnuradio-companion
 #
-# 이미지를 직접 빌드하려면 docker-compose.build.yml 사용:
-#   docker compose -f docker-compose.build.yml up -d --build
 
 services:
   gnuradio:
